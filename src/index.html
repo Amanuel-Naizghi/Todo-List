@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo List</title>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="menu-items">
+                <h3>My-Todo-List</h3>
+                <div class="all-projects">
+                    <input type="color" id="all" value="#A0937D">
+                    <p class="all" name="all">All</p>
+                </div>
+                <div class="today-projects">
+                    <input type="color" id="today" value="#973131">
+                    <p class="today" name="today">Today</p>
+                </div>
+                <div class="projects">
+                    <h3>Projects</h3>
+                    <div class="add-icon-small"></div>
+                    <div class="project-list"></div>
+                    <div class="reset-projects">
+                        <button>Reset Projects</button>
+                    </div>
+                </div>
+            </div>
+            <div class="project-view">
+                <h1></h1>
+            </div>
+            <div class="todo-list">
+                <div class="nav-title">
+                    <span>Todo</span>
+                    <span>Date</span>
+                    <span>Priority</span>
+                    <span>Status</span>
+                </div>
+                <div class="Todo-list"></div>
+                <div class="add-icon-large"></div>
+            </div>
+            <dialog id="my-dialog">
+                <form action="" method="post" onsubmit="return false" id="my-form">
+                    <legend>Add Projects</legend>
+                    <input type="text" id="project-name" name="project-name" placeholder="Project Name" required>
+                    <button type="submit" id="add-project">Add project</button>
+                </form>
+            </dialog>
+            <dialog id="my-dialog2">
+                <form action="" method="post" onsubmit="return false" id="my-form2">
+                    <legend>Add-Todo</legend>
+                    <input type="text" id="todo-name" name="todo-name" placeholder="Name of Todo" required>
+                    <div class="date">
+                        <label for="todo-date">Date</label>
+                        <input type="date" id="todo-date" name="todo-date">
+                    </div>
+                    <div class="priority">
+                        <label for="todo-priority">Priority</label>
+                        <select name="priority" id="todo-priority">
+                            <option value="Low" selected>Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="status">
+                        <label for="todo-status">Status</label>
+                        <select name="status" id="todo-status">
+                            <option value="Not started">Not started</option>
+                            <option value="In progress">In progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="project">
+                        <label for="todo-project">Project</label>
+                        <select name="project" id="todo-project" required>
+                            <option value=""></option>
+                        </select>     
+                    </div>
+                    <div class="button">
+                        <button>Add</button>
+                    </div>
+                </form>
+            </dialog>
+            <dialog id="my-dialog3">
+                <form action="" method="post" onsubmit="return false" id="my-form3">
+                    <legend>Edit-Todo</legend>
+                    <input type="text" id="todo-name-update" name="todo-name" placeholder="Name of Todo" required>
+                    <div class="date">
+                        <label for="todo-date-update">Date</label>
+                        <input type="date" id="todo-date-update" name="todo-date">
+                    </div>
+                    <div class="prioriry">
+                        <label for="todo-priority-update">Priority</label>
+                        <select name="priority" id="todo-priority-update">
+                            <option value="Low" selected>Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="status">
+                        <label for="todo-status-update">Status</label>
+                        <select name="status" id="todo-status-update">
+                            <option value="Not started">Not started</option>
+                            <option value="In progress">In progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="project">
+                        <label for="todo-project-update">Project</label>
+                        <select name="project" id="todo-project-update">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="button">
+                        <button>Edit</button>
+                    </div>
+                </form>
+            </dialog>
+        </div>
+    </div>
+</body>
+</html>
