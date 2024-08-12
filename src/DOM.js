@@ -1,19 +1,20 @@
 import {projectList} from './projects.js';
-import removeIconImage from './images/remove.png';
 import editIconImage from './images/edit.png';
+import removeIconImage from './images/remove.png';
 import {TodoItems} from './Todo-list.js';
+import {loadingFromLS}  from './local-storage.js';
 
 let projectCounter=0;
 let projectClicked=false;
 let todoCounter=0;
 let previousProjSelected="";
 let todayDate;
-
+//Retrieves the project name given while creating a new project
 function getProjectName(){
     const projectInput=document.querySelector('#project-name');
     return projectInput;
 }
-
+//It gets the index of the todo item where the delete button is clicked
 function getRemovedProject(e){
     let clickedParentContainer=e.target.parentNode;
     let clickedParentContainerIndex=clickedParentContainer.parentNode.getAttribute('data-index');
@@ -41,7 +42,7 @@ function closeProjectDialog(){
     projectDialog.close();
 }
 
-function addProjectDom(color){
+function addProjectDom(color,projectName){
     
     const projectContainer=document.querySelector('.project-list');
     const newProjectContainer=document.createElement('div');
@@ -55,9 +56,12 @@ function addProjectDom(color){
     newColorInput.setAttribute('id',`color-input${projectCounter}`);
     newColorInput.setAttribute('class','myColorInput');
 
-    const removeIcon=new Image();
-    removeIcon.src=removeIconImage;
-    newProjectName.textContent=`${projectList[projectList.length-1]}`;
+    if(!loadingFromLS){
+        newProjectName.textContent=`${projectList[projectList.length-1]}`;
+    }
+    else{
+        newProjectName.textContent=`${projectName}`;
+    }
 
     newProjectContainer.appendChild(newColorInput);
     newProjectContainer.appendChild(newProjectName);
@@ -65,7 +69,7 @@ function addProjectDom(color){
 
     projectCounter+=1;
 }
-
+//Finds the index of all todo items with the same project name
 function getAllRelatedProjectIndex(e){
     let relatedProjectList=[];
     let clickedProjectIndex=e.target.parentNode.getAttribute('data-index');
@@ -78,7 +82,7 @@ function getAllRelatedProjectIndex(e){
     });
     return relatedProjectList;
 }
-
+//Adds all todo items into the DOM when all projects is clicked
 function putAllProjectsToDOM(myArray){
     todoCounter=0;
     projectClicked=true;
@@ -88,7 +92,7 @@ function putAllProjectsToDOM(myArray){
     });
     projectClicked=false;
 }
-
+//Retrieves the index of all projects with the same date 
 function getTodayProjectIndex(){
     document.querySelector('.project-view>h1').textContent="Today"
 
@@ -106,7 +110,7 @@ function getTodayProjectIndex(){
     });
     return todayArrayIndex;
 }
-
+//Clears all projects from the DOM
 function removeAllProjectsAndTodoFromDOM(){
     document.querySelector('.Todo-list').innerHTML="";
     document.querySelector('.project-list').innerHTML="";
@@ -147,19 +151,25 @@ function changeProjectBackground(e){
 function getClickedProjectIndex(e){
     previousProjSelected=e.target.parentNode.getAttribute('data-index');
 }
-
+//Checks whether the input of the project name is the same as the currently opened project 
 function checkClickedInputAndProjectView(e){
     if(e.target.parentNode.children[1].textContent===document.querySelector(".project-view>h1").textContent){
         return true;
     }
 }
-
+//Used for changing the color of the project view same as the color selected by the currently selected project list color input
 function changeProjectViewColor(e){
     document.querySelector(".project-view").style.background=e.target.value;
 }
+//For loading the previously selected color from the local storage
+function changeColorForAllAndTodayProject(){
+    let colorArray=JSON.parse(localStorage.getItem('colorList'));
+    document.querySelector('#all').value=colorArray[0];
+    document.querySelector('#today').value=colorArray[1];
+}
 
 //Todo-list module DOM
-
+//Adds the list of projects into the select box of the dialog used for creating a new project
 function addProListToSelBox(projectList){
     let select=document.querySelector('#todo-project');
     select.innerHTML="";
@@ -170,7 +180,7 @@ function addProListToSelBox(projectList){
         select.appendChild(option);
     })
 }
-
+//Retrieves the input given by the user from the dialog box
 function getDialogValues(){
     let TodoObject={};
     TodoObject.todoName=document.querySelector('#todo-name').value;
@@ -180,13 +190,13 @@ function getDialogValues(){
     TodoObject.project=document.querySelector('#todo-project').value;
     return TodoObject;
 }
-
+//Closes the dialog for creating a new todo after the user fill and submit the add dialog box
 function closeTodoDialog(){
     const TodoDialog=document.querySelector('#my-dialog2');
     document.querySelector('#my-form2').reset();
     TodoDialog.close();
 }
-
+//Adds new todo item and its components into the DOM
 function addTodoDom(index){
     const TodoContainer=document.querySelector('.Todo-list');
     const newTodoContainer=document.createElement('div');
@@ -257,7 +267,7 @@ function addTodoDom(index){
 
     todoCounter+=1;
 }
-
+//gets the specific index of the  todo item div after the delete icon is clicked
 function getRemovedTodo(e){
     return getRemovedProject(e);
 }
@@ -281,7 +291,7 @@ function getClickedCheckbox(e){
     let clickedCheckBox=e.target;
     return clickedCheckBox;
 }
-
+//Used when a check box is checked or unchecked
 function makeAction(checkboxClicked){
     let parentContainerIndex=checkboxClicked.parentNode.getAttribute('data-index');
     let myLabel=document.querySelector(`.Todo-list>[data-index="${parentContainerIndex}"]`).children[1].textContent;
@@ -304,13 +314,13 @@ function makeAction(checkboxClicked){
         checkboxClicked.parentNode.children[4].style.background="";
     }
 }
-
+//Checks whether all the dialogues are open or closed
 function checkDialogOpenOrClose(){
     if(!document.querySelector('#my-dialog').open&&!document.querySelector('#my-dialog2').open){
         return true;
     }
 }
-
+//Opens the edit dialog and it adds the previous values to it
 function openTodoDialogForEditing(e){
     let TodoDialog=document.querySelector('#my-dialog3');
     TodoDialog.show();
@@ -323,7 +333,7 @@ function openTodoDialogForEditing(e){
     document.querySelector('#todo-status-update').value=TodoItems[parentContainerIndex].status;   
     document.querySelector('#todo-project-update').value=TodoItems[parentContainerIndex].project;  
 }
-
+//Updates the todo items data from the edited dialogue
 function updateArrayData(e){
     let parentContainerIndex=e.target.parentNode.parentNode.getAttribute('data-index');
     TodoItems[parentContainerIndex].todoName=document.querySelector('#todo-name-update').value;
@@ -370,7 +380,7 @@ function updateDOM(e){
     const editDialog=document.querySelector('#my-dialog3');
     editDialog.close();
 }
-
+//Adds the project list to the select box of the edit dialogue
 function addProListToSelBox2(projectList){
     let select=document.querySelector('#todo-project-update');
     select.innerHTML="";
@@ -429,10 +439,25 @@ function setProjectViewColor(e){
     }
 }
 
+//For getting all the project colors
+
+function getProjectColor(){
+    let myColorArray=[];
+    let allProjectColor=document.querySelector("#all").value;
+    let todayProjectColor=document.querySelector("#today").value;
+    myColorArray.push(allProjectColor);
+    myColorArray.push(todayProjectColor);
+    let projectNodeList=document.querySelectorAll(".project-list>div");
+    projectNodeList.forEach(item=>{
+        myColorArray.push(item.children[0].value);
+    });
+    return myColorArray;
+}
+
 export {getProjectName,closeProjectDialog,addProjectDom,setNewIndex
         ,addProListToSelBox,getDialogValues,getAllRelatedProjectIndex,putAllProjectsToDOM
         ,getTodayProjectIndex,removeAllProjectsAndTodoFromDOM,changeHeaderTextToAll,changeProjectBackground,
-        getClickedProjectIndex,checkClickedInputAndProjectView,changeProjectViewColor,closeTodoDialog,addTodoDom
-        ,getRemovedTodo,removeTodoFromDOM,setNewIndexTodo,getClickedCheckbox,makeAction,checkDialogOpenOrClose,
-        openTodoDialogForEditing,updateArrayData,updateDOM,addProListToSelBox2,checkProjectMatches,checkProjectMatches2
-        ,setProjectViewColor};
+        getClickedProjectIndex,checkClickedInputAndProjectView,changeProjectViewColor,changeColorForAllAndTodayProject
+        ,closeTodoDialog,addTodoDom,getRemovedTodo,removeTodoFromDOM,setNewIndexTodo,getClickedCheckbox,makeAction,
+        checkDialogOpenOrClose,openTodoDialogForEditing,updateArrayData,updateDOM,addProListToSelBox2,checkProjectMatches
+        ,checkProjectMatches2,setProjectViewColor,getProjectColor};

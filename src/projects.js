@@ -4,9 +4,10 @@ import {getProjectName,closeProjectDialog,addProjectDom
         changeHeaderTextToAll,setProjectViewColor,changeProjectBackground,getClickedProjectIndex} from './DOM.js';
 import {TodoItems} from './Todo-list.js';
 import {generateRandomColor} from './color-view.js';
+import { saveProjectColorAndTodo } from './local-storage.js';
 
 let projectList=["Personal"];
-
+//For adding a project to the project list
 function addProjects(){
     const projectInput=getProjectName();
     projectList.push(projectInput.value);
@@ -14,6 +15,7 @@ function addProjects(){
     addProjectDom(myColor);
     console.log(projectList);//Just for viewing the project list array in the console
     closeProjectDialog();
+    saveProjectColorAndTodo().saveProject(projectList);//For saving the projectList array in the local storage
 }
 
 // function removeProjects(e){
@@ -42,7 +44,7 @@ function addAllProjectsToTodoList(e){
     changeProjectBackground(e);
     setProjectViewColor("All");
 }
-
+//Functions when today div is clicked and it displays projects that are for today
 function addTodayProjectsToTodoList(e){
     let todayProjectsIndex=getTodayProjectIndex();
     putAllProjectsToDOM(todayProjectsIndex);
@@ -56,6 +58,8 @@ function removeAllProjects(){
     TodoItems.length=0;
     removeAllProjectsAndTodoFromDOM();
     addProjectDom("#DEAC80");
+    saveProjectColorAndTodo().saveProject(projectList);//For saving the projectList array in the local storage
+    saveProjectColorAndTodo().saveTodo(TodoItems);
 }
 
 export {addProjects,projectList,addProjectsToTodoList,addAllProjectsToTodoList,
